@@ -27,7 +27,7 @@ cd commit-critic
 ### 2\. Create a virtual environment and install dependencies
 
 ```plaintext
-uv venv   # or python3 -m venv .venv   If you dont want to use uv
+uv venv   # or python3 -m venv .venv   # If you dont want to use uv
 source .venv/bin/activate   # On Windows: .venv\Scripts\activate
 uv pip install -r requirements.txt  # or remove uv and just run pip command
 ```
