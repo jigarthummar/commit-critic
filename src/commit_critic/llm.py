@@ -4,7 +4,7 @@ import textwrap
 from openai import OpenAI
 from .models import CommitInfo, CommitCritique
 from .ui import styled, DIM, YELLOW, RED
-from .config import load_config
+from .config import load_config, LOG
 
 ANALYSIS_SYSTEM = textwrap.dedent("""\
     You are a senior developer who reviews Git commit messages against the
@@ -189,6 +189,8 @@ def llm_analyze(client, commits: list[CommitInfo], model: str | None = None, bat
             for c in batch
         ], indent=2)
 
+        LOG.debug("LLM request batch %s: payload=%s", idx + 1, payload)
+
         try:
             resp = client.chat.completions.create(
                 model=model,
@@ -203,6 +205,7 @@ def llm_analyze(client, commits: list[CommitInfo], model: str | None = None, bat
             continue
 
         text = resp.choices[0].message.content.strip()
+        LOG.debug("LLM response batch %s (raw): %s", idx + 1, text[:2000] + ("..." if len(text) > 2000 else ""))
 
         # Robustly parse — strip markdown fences if present
         if text.startswith("```"):
@@ -217,14 +220,16 @@ def llm_analyze(client, commits: list[CommitInfo], model: str | None = None, bat
             continue
 
         for item in items:
-            all_critiques.append(CommitCritique(
+            critique = CommitCritique(
                 hash=item.get("hash", ""),
                 message=item.get("message", ""),
                 score=int(item.get("score", 5)),
                 issue=item.get("issue", ""),
                 suggestion=item.get("suggestion", ""),
                 praise=item.get("praise", ""),
-            ))
+            )
+            LOG.debug("Parsed critique: hash=%r message=%r score=%s", critique.hash, critique.message, critique.score)
+            all_critiques.append(critique)
 
     return all_critiques
 
