@@ -23,6 +23,7 @@ class RepoStats:
     total: int = 0
     avg_score: float = 0.0
     vague_count: int = 0
+    decent_count: int = 0
     one_word_count: int = 0
     good_count: int = 0
     critiques: list = field(default_factory=list)

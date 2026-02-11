@@ -58,11 +58,13 @@ def print_analysis(stats) -> None:
     print(f"  Total commits analyzed : {stats.total}")
     print(f"  Average score          : {styled(f'{stats.avg_score:.1f}/10', BOLD)}")
     pct_vague = (stats.vague_count / stats.total * 100) if stats.total else 0
+    pct_decent = (stats.decent_count / stats.total * 100) if stats.total else 0
     pct_one = (stats.one_word_count / stats.total * 100) if stats.total else 0
     pct_good = (stats.good_count / stats.total * 100) if stats.total else 0
-    print(f"  Vague commits          : {stats.vague_count} ({pct_vague:.0f}%)")
-    print(f"  One-word commits       : {stats.one_word_count} ({pct_one:.0f}%)")
+    print(f"  Vague commits (<5)     : {stats.vague_count} ({pct_vague:.0f}%)")
+    print(f"  Decent commits (5-6)   : {stats.decent_count} ({pct_decent:.0f}%)")
     print(f"  Good commits (≥7)      : {stats.good_count} ({pct_good:.0f}%)")
+    print(f"  One-word commits       : {stats.one_word_count} ({pct_one:.0f}%)")
     print()
 
 

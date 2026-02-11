@@ -21,8 +21,8 @@ def get_commits(n: int = 50, cwd: str | None = None) -> list[CommitInfo]:
     fmt = f"%H%n%an%n%ai%n%B{sep}"
     log = run_git(["log", f"-{n}", f"--pretty=format:{fmt}"], cwd=cwd)
     commits = []
-    # Strip the final separator if present and split
-    blocks = log.strip(sep).split(sep)
+    # Strip the final separator if present and split (git emits \x00 for %x00)
+    blocks = log.strip("\x00").split("\x00")
     
     for block in blocks:
         lines = block.strip().splitlines()

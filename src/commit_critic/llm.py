@@ -29,16 +29,76 @@ ANALYSIS_SYSTEM = textwrap.dedent("""\
 WRITE_SYSTEM = textwrap.dedent("""\
     You are a senior developer helping write the perfect commit message.
     Given a `git diff --staged` output, produce a commit message following
-    Conventional Commits (type(scope): description) with an optional body of
-    bullet points describing the key changes.
+    the Conventional Commits specification.
 
-    Return ONLY a JSON object:
+    ## Conventional Commits Rules
+
+    The commit message MUST be structured as:
+```
+    <type>[optional scope]: <description>
+
+    [optional body]
+
+    [optional footer(s)]
+```
+
+    ### Types
+    Choose the MOST appropriate type based on the primary intent of the change:
+
+    - feat:     A new feature (correlates with MINOR in SemVer)
+    - fix:      A bug fix (correlates with PATCH in SemVer)
+    - docs:     Documentation only changes
+    - style:    Changes that do not affect the meaning of the code
+                (white-space, formatting, missing semi-colons, etc)
+    - refactor: A code change that improves code structure without changing
+                functionality (renaming, restructuring classes/methods,
+                extracting functions, etc)
+    - perf:     A code change that improves performance
+    - test:     Adding missing tests or correcting existing tests
+    - build:    Changes that affect the build system or external dependencies
+    - ci:       Changes to CI configuration files and scripts
+    - chore:    Other changes that don't modify src or test files
+    - revert:   Reverts a previous commit
+
+    ### Rules
+    - The summary MUST be prefixed with a type (noun), followed by an OPTIONAL
+      scope in parentheses, OPTIONAL `!` (for breaking changes), and a REQUIRED
+      terminal colon and space. e.g., `feat(parser): add ability to parse arrays`
+    - Use `feat` when the commit adds a new feature.
+    - Use `fix` when the commit represents a bug fix.
+    - A scope, if provided, MUST be a noun describing a section of the codebase
+      surrounded by parentheses. e.g., `fix(parser):`
+    - The description MUST immediately follow the colon and space. It is a short
+      summary of the code changes.
+    - Breaking changes MUST be indicated by appending `!` after the type/scope
+      and before the colon, OR as a footer: `BREAKING CHANGE: <description>`.
+      BREAKING CHANGE MUST be uppercase.
+    - Types other than feat and fix are NOT case sensitive, but BREAKING CHANGE
+      MUST always be uppercase.
+    - For `revert` commits, the body SHOULD contain: `This reverts commit <hash>.`
+
+    ### Body Guidelines
+    CRITICAL: The body must ONLY contain significant, meaningful changes.
+    - DO NOT mention "whitespace cleanup", "formatting", or "file ending" fixes.
+    - DO NOT mention "cosmetic changes" or trivial reformatting.
+    - If the change is only whitespace/formatting, return a summary but NO body.
+    - Each bullet should describe one logical change concisely.
+
+    ### Footer Guidelines
+    - Footers follow git trailer format: `Token: value` or `Token #value`
+    - Footer tokens MUST use `-` in place of whitespace (e.g., `Acked-by`),
+      except for `BREAKING CHANGE` which may use a space.
+    - Include a `BREAKING CHANGE:` footer when introducing breaking API changes
+      (if not already indicated with `!` in the type/scope prefix).
+
+    ## Output Format
+    Return ONLY a JSON object with no markdown fences and no extra text:
     {
       "summary": "one-line summary in conventional-commit format",
       "body": ["bullet 1", "bullet 2", ...],
+      "breaking_change": "description if applicable, otherwise null",
       "changes_detected": ["high-level description of each logical change"]
     }
-    No markdown fences. No extra text.
 """)
 
 
@@ -74,7 +134,7 @@ def llm_analyze(client, commits: list[CommitInfo], model: str | None = None, bat
         try:
             resp = client.chat.completions.create(
                 model=model,
-                max_tokens=4096,
+                max_tokens=10000,
                 messages=[
                     {"role": "system", "content": ANALYSIS_SYSTEM},
                     {"role": "user", "content": payload},
@@ -126,7 +186,7 @@ def llm_write(client, diff: str, model: str | None = None) -> dict:
     try:
         resp = client.chat.completions.create(
             model=model,
-            max_tokens=2048,
+            max_tokens=10000,
             messages=[
                 {"role": "system", "content": WRITE_SYSTEM},
                 {"role": "user", "content": user_msg},

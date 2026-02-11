@@ -39,6 +39,7 @@ def cmd_analyze(args) -> None:
             total=len(critiques),
             avg_score=sum(c.score for c in critiques) / len(critiques) if critiques else 0,
             vague_count=sum(1 for c in critiques if c.score < 5),
+            decent_count=sum(1 for c in critiques if 5 <= c.score < 7),
             one_word_count=sum(1 for c in critiques if len(c.message.split()) <= 1),
             good_count=sum(1 for c in critiques if c.score >= 7),
             critiques=critiques,
