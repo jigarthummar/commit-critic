@@ -237,6 +237,7 @@ def llm_write(client, diff: str, model: str | None = None) -> dict:
     # Truncate very large diffs to stay within context limits
     max_diff_chars = 100_000
     if len(diff) > max_diff_chars:
+        print(styled(f"  Warning: Diff is too large ({len(diff)} chars). Truncating to {max_diff_chars} chars.", YELLOW))
         diff = diff[:max_diff_chars] + "\n\n... [diff truncated] ..."
 
     user_msg = f"Here is the `git diff --staged`:\n```\n{diff}\n```"
@@ -244,7 +245,7 @@ def llm_write(client, diff: str, model: str | None = None) -> dict:
     try:
         resp = client.chat.completions.create(
             model=model,
-            max_tokens=10000,
+            max_tokens=6000,
             messages=[
                 {"role": "system", "content": WRITE_SYSTEM},
                 {"role": "user", "content": user_msg},

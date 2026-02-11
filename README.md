@@ -52,6 +52,17 @@ Get your API key from [OpenRouter](https://openrouter.ai/).
 
 ## Usage
 
+### CLI options
+
+| Option | Description |
+| --- | --- |
+| `--analyze` | Analyze existing commit history (last N commits in current or remote repo). |
+| `--write` | Interactive commit message writer: suggest a Conventional Commit from staged changes. |
+| `--url=<repo_url>` | Remote Git repo URL to analyze. Use only with `--analyze`. |
+| `-n`, `--num <n>` | Number of commits to analyze (default: 50). Use only with `--analyze`. |
+
+You must use either `--analyze` or `--write`; they are mutually exclusive.
+
 ### Analyze existing commits
 
 Review the last 50 commits in the current repository:

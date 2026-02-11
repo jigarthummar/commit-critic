@@ -27,7 +27,8 @@ def print_analysis(stats) -> None:
         print(styled(RULE, RED))
         for c in sorted(bad, key=lambda x: x.score):
             print()
-            trunc = c.message.splitlines()[0][:80]
+            lines = c.message.splitlines()
+            trunc = lines[0][:80] if lines else "(no message)"
             print(f'  Commit: {styled(f"{trunc!r}", YELLOW)}')
             color = RED if c.score <= 3 else YELLOW
             print(f"  Score:  {styled(f'{c.score}/10', color, BOLD)}")
@@ -42,9 +43,10 @@ def print_analysis(stats) -> None:
         print(styled(RULE, GREEN))
         print(styled("💎 WELL-WRITTEN COMMITS", GREEN, BOLD))
         print(styled(RULE, GREEN))
-        for c in sorted(good, key=lambda x: -x.score)[:10]:
+        for c in sorted(good, key=lambda x: -x.score):
             print()
-            trunc = c.message.splitlines()[0][:80]
+            lines = c.message.splitlines()
+            trunc = lines[0][:80] if lines else "(no message)"
             print(f'  Commit: {styled(f"{trunc!r}", CYAN)}')
             print(f"  Score:  {styled(f'{c.score}/10', GREEN, BOLD)}")
             if c.praise:
