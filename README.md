@@ -1,38 +1,48 @@
-# AI Commit Message Critic
+## AI Commit Message Critic
 
 A terminal tool that leverages LLMs (via OpenRouter) to analyze Git commit message quality and assist in writing better, Conventional Commit-style messages.
 
 ## Features
 
-- **Analyze Mode**: Review and score existing commits (local or remote) to identify vague or meaningless messages
-- **Write Mode**: Generate Conventional Commit messages based on your staged changes
-- **Configurable**: Uses OpenRouter to support various LLMs (defaults to Claude Sonnet 4.5)
+*   **Analyze Mode**: Review and score existing commits (local or remote) to identify vague or meaningless messages
+*   **Write Mode**: Generate Conventional Commit messages based on your staged changes
+*   **Configurable**: Uses OpenRouter to support various LLMs (defaults to Claude Sonnet 4.5)
 
 ## Requirements
 
-- Python 3.10+
-- Git installed and available in PATH
-- [OpenRouter](https://openrouter.ai/) API key
+*   Python 3.10+
+*   [uv](https://docs.astral.sh/uv/) (recommended) or pip
+*   Git installed and available in PATH
+*   [OpenRouter](https://openrouter.ai/) API key
 
 ## Setup
 
-### 1. Install dependencies
+### 1\. Clone the repository
 
-```bash
-pip install -r requirements.txt
+```plaintext
+git clone https://github.com/jigarthummar/commit-critic.git
+cd commit-critic
 ```
 
-### 2. Configure environment
+### 2\. Create a virtual environment and install dependencies
+
+```plaintext
+uv venv   # or python3 -m venv .venv   If you dont want to use uv
+source .venv/bin/activate   # On Windows: .venv\Scripts\activate
+uv pip install -r requirements.txt  # or remove uv and just run pip command
+```
+
+### 3\. Configure environment
 
 Copy `.env.example` to `.env`:
 
-```bash
+```plaintext
 cp .env.example .env
 ```
 
 Edit `.env` and add your OpenRouter API key:
 
-```
+```plaintext
 OPENROUTER_API_KEY=sk-or-...
 OPENROUTER_BASE_URL=https://openrouter.ai/api/v1
 OPENROUTER_MODEL=anthropic/claude-sonnet-4.5
@@ -46,42 +56,43 @@ Get your API key from [OpenRouter](https://openrouter.ai/).
 
 Review the last 50 commits in the current repository:
 
-```bash
-python commit_critic.py --analyze
+```plaintext
+uv run commit_critic.py --analyze    # or python commit_critic.py ....
 ```
 
 Review the last 100 commits:
 
-```bash
-python commit_critic.py --analyze -n 100
+```plaintext
+uv run commit_critic.py --analyze -n 100      # or python commit_critic.py ....
 ```
 
 Review a remote GitHub repository:
 
-```bash
-python commit_critic.py --analyze --url="https://github.com/user/repo"
+```plaintext
+uv run commit_critic.py --analyze --url="https://github.com/user/repo"      # or python commit_critic.py ....
 ```
 
 ### Write a new commit message
 
 Stage your changes first, then let the AI suggest a message:
 
-```bash
+```plaintext
 git add .
-python commit_critic.py --write
+uv run python commit_critic.py --write     # or python commit_critic.py ....
 ```
 
 The tool will:
-1. Analyze your staged diff
-2. Suggest a title and body following [Conventional Commits](https://www.conventionalcommits.org/)
-3. Allow you to **Accept** (Enter), **Edit**, or **Quit**
+
+1.  Analyze your staged diff
+2.  Suggest a title and body following [Conventional Commits](https://www.conventionalcommits.org/)
+3.  Allow you to **Accept** (Enter), **Edit**, or **Quit**
 
 ## Scoring System
 
 The AI rates commit messages on a scale of 1–10:
 
 | Score | Meaning | Examples |
-|-------|---------|----------|
+| --- | --- | --- |
 | **1–2** | Meaningless | "wip", "fix", emoji-only |
 | **3–4** | Too vague | "fixed bug", "update logic" |
 | **5–6** | Decent | Lacks context or clear scope |
