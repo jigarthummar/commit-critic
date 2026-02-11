@@ -68,19 +68,19 @@ You must use either `--analyze` or `--write`; they are mutually exclusive.
 Review the last 50 commits in the current repository:
 
 ```plaintext
-uv run python commit_critic.py --analyze    # or: python commit_critic.py --analyze
+uv run commit_critic.py --analyze    # or: python commit_critic.py --analyze
 ```
 
 Review the last 100 commits:
 
 ```plaintext
-uv run python commit_critic.py --analyze -n 100    # or: python commit_critic.py --analyze -n 100
+uv run commit_critic.py --analyze -n 100    # or: python commit_critic.py --analyze -n 100
 ```
 
 Review a remote GitHub repository:
 
 ```plaintext
-uv run python commit_critic.py --analyze --url="https://github.com/user/repo"    # or: python commit_critic.py --analyze --url="..."
+uv run commit_critic.py --analyze --url="https://github.com/user/repo"    # or: python commit_critic.py --analyze --url="..."
 ```
 
 ### Write a new commit message
@@ -89,7 +89,7 @@ Stage your changes first, then let the AI suggest a message:
 
 ```plaintext
 git add .
-uv run python commit_critic.py --write    # or: python commit_critic.py --write
+uv run commit_critic.py --write    # or: python commit_critic.py --write
 ```
 
 The tool will:
