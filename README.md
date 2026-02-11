@@ -27,7 +27,7 @@ cd commit-critic
 ### 2\. Create a virtual environment and install dependencies
 
 ```plaintext
-uv venv   # or python3 -m venv .venv   If you dont want to use uv
+uv venv   # or: python3 -m venv .venv (if you don't want to use uv)
 source .venv/bin/activate   # On Windows: .venv\Scripts\activate
 uv pip install -r requirements.txt  # or remove uv and just run pip command
 ```
@@ -57,19 +57,19 @@ Get your API key from [OpenRouter](https://openrouter.ai/).
 Review the last 50 commits in the current repository:
 
 ```plaintext
-uv run commit_critic.py --analyze    # or python commit_critic.py ....
+uv run python commit_critic.py --analyze    # or: python commit_critic.py --analyze
 ```
 
 Review the last 100 commits:
 
 ```plaintext
-uv run commit_critic.py --analyze -n 100      # or python commit_critic.py ....
+uv run python commit_critic.py --analyze -n 100    # or: python commit_critic.py --analyze -n 100
 ```
 
 Review a remote GitHub repository:
 
 ```plaintext
-uv run commit_critic.py --analyze --url="https://github.com/user/repo"      # or python commit_critic.py ....
+uv run python commit_critic.py --analyze --url="https://github.com/user/repo"    # or: python commit_critic.py --analyze --url="..."
 ```
 
 ### Write a new commit message
@@ -78,7 +78,7 @@ Stage your changes first, then let the AI suggest a message:
 
 ```plaintext
 git add .
-uv run python commit_critic.py --write     # or python commit_critic.py ....
+uv run python commit_critic.py --write    # or: python commit_critic.py --write
 ```
 
 The tool will:
