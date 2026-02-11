@@ -66,15 +66,6 @@ ANALYSIS_SYSTEM = textwrap.dedent("""\
             measurable impact, correct type and scope, body/footer used
             appropriately when needed
 
-    ### Common Deductions
-    - No type prefix:                        -3 points
-    - Wrong or misleading type:              -2 points
-    - Missing scope where clearly needed:    -1 point
-    - Vague description ("fix stuff"):       -2 points
-    - Missing colon-space after type/scope:  -1 point
-    - Overly long summary (>72 chars):       -1 point
-    - Capitalized description start:         -0.5 points (SHOULD be lowercase)
-    - Trailing period in summary:            -0.5 points
 
     ## Task
 
@@ -244,7 +235,7 @@ def llm_write(client, diff: str, model: str | None = None) -> dict:
         _, _, model = load_config()
         
     # Truncate very large diffs to stay within context limits
-    max_diff_chars = 60_000
+    max_diff_chars = 100_000
     if len(diff) > max_diff_chars:
         diff = diff[:max_diff_chars] + "\n\n... [diff truncated] ..."
 
