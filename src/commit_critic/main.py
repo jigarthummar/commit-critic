@@ -3,7 +3,7 @@ import sys
 import shutil
 import textwrap
 
-from .config import validate_config, load_config
+from .config import validate_config, load_config, setup_logging
 from .git_ops import get_commits, clone_repo, get_staged_diff, run_git
 from .llm import get_openrouter_client, llm_analyze, llm_write
 from .models import RepoStats
@@ -111,8 +111,11 @@ def main() -> None:
                         help="Remote Git repo URL to analyze (used with --analyze)")
     parser.add_argument("-n", "--num", type=int, default=50,
                         help="Number of commits to analyze (default: 50)")
+    parser.add_argument("-v", "--verbose", action="store_true",
+                        help="Enable debug logs (what we send to the LLM and what we get back)")
 
     args = parser.parse_args()
+    setup_logging(verbose=args.verbose)
 
     if args.url and not args.analyze:
         parser.error("--url can only be used with --analyze")
