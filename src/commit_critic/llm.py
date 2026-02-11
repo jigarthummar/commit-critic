@@ -55,6 +55,7 @@ ANALYSIS_SYSTEM = textwrap.dedent("""\
     Score each commit message 1-10 based on how well it follows the spec:
 
     1-2  : Meaningless — "wip", "fix", single word, emoji-only, no type prefix
+            An empty, blank, or missing commit message MUST be scored 1-2.
     3-4  : Too vague, no context — "fixed bug", "update", "changes", missing
             type or has wrong format (e.g., `Fix bug` instead of `fix: ...`)
     5-6  : Decent but flawed — has a type but missing scope where one would
