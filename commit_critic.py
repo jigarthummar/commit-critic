@@ -13,3 +13,6 @@ from commit_critic.main import main
 
 if __name__ == "__main__":
     main()
+
+
+# Just wated to test the commit critic
